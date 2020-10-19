@@ -1,0 +1,2589 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Visualization with ggplot2</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Meenakshi Kushwaha, October 2020" />
+    <script src="libs/header-attrs-2.3/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/rladies-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Visualization with ggplot2
+## R-Ladies Bangalore | WAQSA
+### Meenakshi Kushwaha, October 2020
+
+---
+
+
+&lt;style type="text/css"&gt;
+# This chunk for sequential highlighting
+# Label class appropriately for slides that need this
+.highlight-last-item &gt; ul &gt; li, 
+.highlight-last-item &gt; ol &gt; li {
+  opacity: 0.5;
+}
+.highlight-last-item &gt; ul &gt; li:last-of-type,
+.highlight-last-item &gt; ol &gt; li:last-of-type {
+  opacity: 1;
+}
+&lt;/style&gt;
+
+
+# Grammar of Graphics
+.pull-right[![](images/wilkinson.jpeg)]
+.pull-left[
+- First published in 1999
+  - Foundation for many graphic applications
+
+- Grammar can be applied to every type of plot
+
+- Concisely describe components
+
+- Construct and deconstruct
+]
+---
+# Grammar of Graphics
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+![](images/tom1.png)
+---
+# Grammar of Graphics
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+.pull-right[![](images/tom_data.png)]
+
+- Your dataset
+
+- Tidy format
+
+---
+# Grammar of Graphics
+
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+.pull-right[![](images/tom_mapping.png)]
+
+- This is how we tell R which variables we want to plot
+
+- *Aesthetics mapping*   
+Links variable in the data to graphical properties
+
+- *Facets mapping*   
+Links variable in data to panels in the plot layout
+---
+# Grammar of Graphics
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+.pull-right[![](images/tom_statistics.png)]
+
+- Even tidy data may need some transformation
+
+- Transform input variables to displayed values
+  - Bins for histogram
+  - Summary statistics for boxplot
+  - No. of observations in a category for bar chart
+  
+- Implicit in many plot types 
+---
+# Grammar of Graphics
+.footnote[Source: ggplot2 workshop by @thomasp85]
+.pull-right[![](images/tom_scales.png)]
+
+- Help you interpret the plot
+  - Categories -&gt; color
+  - Numeric -&gt; position
+
+- Automatically generated in ggplot and can be customized
+  - log scale
+  - time series
+
+---
+# Grammar of Graphics
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+.pull-right[![](images/tom_geometries.png)]
+
+- Aesthetics as graphical repersentations
+
+- Determines your plot type
+  - bar chart
+  - scatter
+  - boxplot
+  - ...
+
+---
+
+# Grammar of Graphics
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+.pull-right[![](images/tom_facets.png)]
+
+- Divide your data into panels using one or two groups
+
+- Allows you to look at smaller subsets of data
+
+---
+# Grammar of Graphics
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+.pull-right[![](images/tom_coordinates.png)]
+
+- Positions are interpreted by the coordinate system
+
+- Defines the physical mapping of the aesthetics 
+
+---
+# Grammar of Graphics
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+.pull-right[![](images/tom_theme.png)]
+
+- Overall look of the plot
+
+- Spans every part of the graphic that is not linked to the data
+  - "non-data ink"
+  
+---
+
+![](images/horst_ggplot.jpeg)
+
+---
+# Getting Started
+- Load the tidyverse package
+
+```r
+library(tidyverse)
+```
+
+- If this is your first time you may have to install it first
+
+```r
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+---
+class: center, middle
+
+## Do cars with big engines use more fuel than cars with small engines?
+
+---
+# Data set `mpg`
+
+Observations collected by US EPA on 38 models of cars
+
+
+```r
+head(ggplot2::mpg)
+```
+
+```
+# A tibble: 6 x 11
+  manufacturer model displ  year   cyl trans      drv     cty   hwy fl    class 
+  &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;      &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; 
+1 audi         a4      1.8  1999     4 auto(l5)   f        18    29 p     compa…
+2 audi         a4      1.8  1999     4 manual(m5) f        21    29 p     compa…
+3 audi         a4      2    2008     4 manual(m6) f        20    31 p     compa…
+4 audi         a4      2    2008     4 auto(av)   f        21    30 p     compa…
+5 audi         a4      2.8  1999     6 auto(l5)   f        16    26 p     compa…
+6 audi         a4      2.8  1999     6 manual(m5) f        18    26 p     compa…
+```
+
+- `displ` : car's engine size
+
+- `hwy` : car's fuel efficiency on the highway in miles per gallon
+
+- type `?mpg` to learn more about the dataset
+
+???
+a car with low fuel efficiency consumes more fuel than a car with high fuel efficiency for the same distance
+
+
+---
+
+
+count: false
+ 
+#Your first ggplot
+.panel1-my_cars-auto[
+
+```r
+*ggplot(data=mpg)
+```
+]
+ 
+.panel2-my_cars-auto[
+![](index_files/figure-html/my_cars_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Your first ggplot
+.panel1-my_cars-auto[
+
+```r
+ggplot(data=mpg)+
+* aes(x=displ)
+```
+]
+ 
+.panel2-my_cars-auto[
+![](index_files/figure-html/my_cars_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Your first ggplot
+.panel1-my_cars-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+* aes(y=hwy)
+```
+]
+ 
+.panel2-my_cars-auto[
+![](index_files/figure-html/my_cars_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Your first ggplot
+.panel1-my_cars-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+* geom_point()
+```
+]
+ 
+.panel2-my_cars-auto[
+![](index_files/figure-html/my_cars_auto_04_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-my_cars-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-my_cars-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-my_cars-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+
+#What did we need?
+.footnote[Source: ggplot2 workshop by @thomasp85]
+.pull-right[![](images/tom_need.png)]
+
+--
+
+.center[
+.pull-left[
+##All other components use defaults
+]
+]
+---
+class:middle
+# A template
+###`ggplot(data = &lt;DATA&gt;) +`  
+###`&lt;GEOM_FUNCTION&gt; (mapping = aes(&lt;MAPPINGS&gt;))`
+--
+
+`ggplot(data=mpg)+ 
+  geom_point(mapping= aes(x=displ, y=hwy))`
+--
+---
+# Common Problems
+
+- Make sure that every `(` is matched with a `)` 
+
+- Make sure that every `"` is paired with another `"`
+
+- Make sure that `+` is in the right place: it has to come at the end of the line, not the start. The following code will **not work**
+
+
+```r
+ggplot(data = mpg) 
++ geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+- Look for help by typing `?function_name`
+  - scroll down to examples
+  
+- Look at the error message  
+  - *try googling the error message*
+
+
+???
+As you start to run R code, you’re likely to run into problems. Don’t worry — it happens to everyone. I have been writing R code for years, and every day I still write code that doesn’t work! Start by carefully comparing the code that you’re running to the code in the book. R is extremely picky, and a misplaced character can make all the difference.
+---
+####*Let's look at the plot again*
+
+![](images/cars.png)
+---
+
+
+count: false
+ 
+#Aesthetics
+.panel1-my_cars3-non_seq[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()
+```
+]
+ 
+.panel2-my_cars3-non_seq[
+![](index_files/figure-html/my_cars3_non_seq_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Aesthetics
+.panel1-my_cars3-non_seq[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+* aes(color=class)+
+  geom_point()
+```
+]
+ 
+.panel2-my_cars3-non_seq[
+![](index_files/figure-html/my_cars3_non_seq_02_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-my_cars3-non_seq {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-my_cars3-non_seq {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-my_cars3-non_seq {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+---
+
+
+count: false
+ 
+#Aesthetics
+.panel1-my_cars4-non_seq[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()
+```
+]
+ 
+.panel2-my_cars4-non_seq[
+![](index_files/figure-html/my_cars4_non_seq_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Aesthetics
+.panel1-my_cars4-non_seq[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+* aes(shape=class)+
+  geom_point()
+```
+]
+ 
+.panel2-my_cars4-non_seq[
+![](index_files/figure-html/my_cars4_non_seq_02_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-my_cars4-non_seq {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-my_cars4-non_seq {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-my_cars4-non_seq {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+---
+# Aesthetics
+Setting the properties of `geom` manually
+
+```r
+ggplot(data = mpg) + 
+* geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+```
+
+![](index_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+--
+
+Here, the color "blue" doesn’t convey information about a variable, but only changes the appearance of the plot
+---
+# Aesthetics
+
+To set a geometric property manually, place it outside of `aes()`
+
+- The name of a color as a character string
+
+- The size of a point in mm
+
+- The shape of a point as a number
+
+--
+
+![](images/shapes-1.png)
+*R has 25 built in shapes that are identified by numbers*
+---
+# Aesthetics
+![](images/common-aesthetics-1.png)
+
+Remember aesthetics depend on geometry...
+---
+# Geometric Objects
+
+.pull-left[
+![](images/cars.png)
+]  
+.pull-right[
+![](images/cars_line.png)
+]
+  
+Both plots have the same `x` and `y` axes but use different `geoms` or geometries
+--
+???
+Plots are often described as their geoms as boxplots, line plots, etc.
+often described as their geoms as boxplots, line plots, etc.
+
+---
+
+
+count: false
+ 
+#Geometric objects
+.panel1-line-auto[
+
+```r
+*ggplot(data = mpg)
+```
+]
+ 
+.panel2-line-auto[
+![](index_files/figure-html/line_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Geometric objects
+.panel1-line-auto[
+
+```r
+ggplot(data = mpg) +
+* geom_smooth(mapping = aes(
+*                 x = displ,
+*                 y = hwy,
+*                 linetype = drv))
+```
+]
+ 
+.panel2-line-auto[
+![](index_files/figure-html/line_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-line-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-line-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-line-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+---
+
+
+
+
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms-auto[
+
+```r
+*ggplot(data = mpg)
+```
+]
+ 
+.panel2-geoms-auto[
+![](index_files/figure-html/geoms_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms-auto[
+
+```r
+ggplot(data = mpg) +
+* geom_point(mapping = aes(
+*   x = displ,
+*   y = hwy))
+```
+]
+ 
+.panel2-geoms-auto[
+![](index_files/figure-html/geoms_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms-auto[
+
+```r
+ggplot(data = mpg) +
+  geom_point(mapping = aes(
+    x = displ,
+    y = hwy)) +
+* geom_smooth(mapping = aes(
+*   x = displ,
+*   y = hwy))
+```
+]
+ 
+.panel2-geoms-auto[
+![](index_files/figure-html/geoms_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms-auto[
+
+```r
+ggplot(data = mpg) +
+  geom_point(mapping = aes(
+    x = displ,
+    y = hwy)) +
+  geom_smooth(mapping = aes(
+    x = displ,
+    y = hwy))
+```
+]
+ 
+.panel2-geoms-auto[
+![](index_files/figure-html/geoms_auto_04_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-geoms-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-geoms-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-geoms-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+
+
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms2-auto[
+
+```r
+*ggplot(data = mpg,
+*      mapping = aes
+*      (x = displ,
+*        y = hwy))
+```
+]
+ 
+.panel2-geoms2-auto[
+![](index_files/figure-html/geoms2_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms2-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes
+       (x = displ,
+         y = hwy)) +
+* geom_point()
+```
+]
+ 
+.panel2-geoms2-auto[
+![](index_files/figure-html/geoms2_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms2-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes
+       (x = displ,
+         y = hwy)) +
+  geom_point() +
+* geom_smooth()
+```
+]
+ 
+.panel2-geoms2-auto[
+![](index_files/figure-html/geoms2_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms2-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes
+       (x = displ,
+         y = hwy)) +
+  geom_point() +
+  geom_smooth()
+```
+]
+ 
+.panel2-geoms2-auto[
+![](index_files/figure-html/geoms2_auto_04_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-geoms2-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-geoms2-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-geoms2-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+???
+If you place mappings in a geom function, ggplot2 will treat them as local mappings for the layer. It will use these mappings to extend or overwrite the global mappings for that layer only. This makes it possible to display different aesthetics in different layers.
+---
+
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms3-auto[
+
+```r
+*ggplot(data = mpg,
+*      mapping = aes(
+*        x = displ,
+*        y = hwy))
+```
+]
+ 
+.panel2-geoms3-auto[
+![](index_files/figure-html/geoms3_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms3-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = displ,
+         y = hwy)) +
+* geom_point(
+*   mapping = aes(
+*     color = class))
+```
+]
+ 
+.panel2-geoms3-auto[
+![](index_files/figure-html/geoms3_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms3-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = displ,
+         y = hwy)) +
+  geom_point(
+    mapping = aes(
+      color = class)) +
+* geom_smooth()
+```
+]
+ 
+.panel2-geoms3-auto[
+![](index_files/figure-html/geoms3_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Mulitple geoms
+.panel1-geoms3-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = displ,
+         y = hwy)) +
+  geom_point(
+    mapping = aes(
+      color = class)) +
+  geom_smooth()
+```
+]
+ 
+.panel2-geoms3-auto[
+![](index_files/figure-html/geoms3_auto_04_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-geoms3-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-geoms3-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-geoms3-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+##Where to place `aes()`
+
+- If `aes()` function is placed inside ggplot(), the same `aes` is used for all layers
+
+- If `aes()` is placed outside ggplot() function then its definition is used for the specific layer
+
+- Multiple `aes()` can be defined for multiple geometries within the same plot
+---
+
+count: false
+ 
+#Mulitple geoms
+.panel1-geoms4-auto[
+
+```r
+*ggplot(data = mpg,
+*      mapping = aes(
+*        x = displ,
+*        y = hwy))
+```
+]
+ 
+.panel2-geoms4-auto[
+![](index_files/figure-html/geoms4_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Mulitple geoms
+.panel1-geoms4-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = displ,
+         y = hwy)) +
+* geom_point(
+*   mapping = aes(
+*     color = class))
+```
+]
+ 
+.panel2-geoms4-auto[
+![](index_files/figure-html/geoms4_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Mulitple geoms
+.panel1-geoms4-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = displ,
+         y = hwy)) +
+  geom_point(
+    mapping = aes(
+      color = class)) +
+* geom_smooth(data =
+*               filter(mpg,
+*                      class == "suv"),
+*             se = FALSE)
+```
+]
+ 
+.panel2-geoms4-auto[
+![](index_files/figure-html/geoms4_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Mulitple geoms
+.panel1-geoms4-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = displ,
+         y = hwy)) +
+  geom_point(
+    mapping = aes(
+      color = class)) +
+  geom_smooth(data =
+                filter(mpg,
+                       class == "suv"),
+              se = FALSE)
+```
+]
+ 
+.panel2-geoms4-auto[
+![](index_files/figure-html/geoms4_auto_04_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-geoms4-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-geoms4-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-geoms4-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+class:inverse, middle, center
+#Exercises
+---
+# Statistical Transformations
+
+.pull-right[![](images/tom_statistics.png)]
+.pull-left[
+- Linked to geometries
+
+- Every `geom` has a default `stat` and vice versa
+
+- Can use `geom_*()` and `stat_()*` interchangeably but former is more common
+]
+---
+# Statistical Transformations
+
+
+```r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut))
+```
+
+![](index_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+--
+
+Where does count on y-axis come from?
+---
+# Statistical Transformations
+
+.pull-left[
+![](images/ggplot4.png)
+]
+.pull-right[
+
+Some plots calculate new values from the data 
+- Bar charts and histograms  
+
+- smoothing functions 
+
+- boxplots 
+]
+
+--
+
+The algorithm used to calculate new values for a graph is called a **stat**, short for statistical transformation
+
+---
+# Statistical Transformations
+
+![](images/visualization-stat-bar.png)
+
+You can find out which `stat` each `geom` uses by looking at the default value of the `stat` argument of the help page.
+
+What it the default `stat` for `geom_bar`?
+---
+
+# Statistical Transformations
+
+- Overriding default options  
+- Here, display bar chart of proportions instead of count
+
+
+
+```r
+ggplot(data = diamonds) + 
+* geom_bar(mapping = aes(x = cut, y = stat(prop),
+                         group = 1))
+```
+
+![](index_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+---
+#Scales
+.footnote[Source: ggplot2 workshop by @thomasp85]
+
+.pull-right[![](images/tom_scales.png)]
+.pull-left[
+
+- Everything inside `aes()` will have a scale by default
+
+- `scale_&lt;aesthetic&gt;_&lt;type&gt;()`
+
+- `&lt;type&gt;` can either be a generic (continuous, discrete, or binned) or specific (e.g. area, for scaling size to circle area)
+]
+---
+# Scales
+
+
+```r
+ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy, colour = class))
+```
+
+![](index_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+---
+# Scales
+
+
+```r
+ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy, colour = class))+
+* scale_colour_brewer(type = 'qual')
+```
+
+![](index_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+---
+#Scales
+
+```r
+ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy)) +
+* scale_x_continuous(breaks = c(3, 5, 6)) +
+* scale_y_continuous(trans = 'log10')
+```
+
+![](index_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+---
+# Facets
+.footnote[Source: ggplot2 workshop by @thomasp85]
+.pull-right[![](images/tom_facets.png)]
+
+.pull-left[
+- Split data into multiple panels
+
+- Another way to add additional variable
+
+- Useful for categorical variables
+
+- Facet by a single variable `facet_wrap()`
+
+- Facet by two variables `facet_grid()`
+]
+---
+
+
+count: false
+ 
+#Facets
+.panel1-facets-auto[
+
+```r
+*ggplot(data = mpg)
+```
+]
+ 
+.panel2-facets-auto[
+![](index_files/figure-html/facets_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Facets
+.panel1-facets-auto[
+
+```r
+ggplot(data = mpg) +
+* geom_point(mapping = aes(
+*   x = displ,
+*   y = hwy))
+```
+]
+ 
+.panel2-facets-auto[
+![](index_files/figure-html/facets_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Facets
+.panel1-facets-auto[
+
+```r
+ggplot(data = mpg) +
+  geom_point(mapping = aes(
+    x = displ,
+    y = hwy)) +
+* facet_wrap(~ class, nrow = 2)
+```
+]
+ 
+.panel2-facets-auto[
+![](index_files/figure-html/facets_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-facets-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-facets-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-facets-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+
+count: false
+ 
+#Facets
+.panel1-facets2-auto[
+
+```r
+*ggplot(data = mpg)
+```
+]
+ 
+.panel2-facets2-auto[
+![](index_files/figure-html/facets2_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Facets
+.panel1-facets2-auto[
+
+```r
+ggplot(data = mpg) +
+* geom_point(mapping = aes(
+*   x = displ,
+*   y = hwy))
+```
+]
+ 
+.panel2-facets2-auto[
+![](index_files/figure-html/facets2_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Facets
+.panel1-facets2-auto[
+
+```r
+ggplot(data = mpg) +
+  geom_point(mapping = aes(
+    x = displ,
+    y = hwy)) +
+* facet_grid(drv ~ cyl)
+```
+]
+ 
+.panel2-facets2-auto[
+![](index_files/figure-html/facets2_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-facets2-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-facets2-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-facets2-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+class:inverse, middle, center
+#Exercises
+---
+# Coordinates
+.footnote[Source: ggplot2 workshop by @thomasp85]
+.pull-right[![](images/tom_coordinates.png)]
+
+.pull-left[
+- Defining your plot canvas
+  - How should x and y be interpreted?
+  
+- Default is  the Cartesian coordinate system
+
+- Useful for spatial data (map projections)
+]
+---
+
+count: false
+ 
+#Coordinate Systems
+.panel1-coord-auto[
+
+```r
+*ggplot(data = mpg,
+*      mapping = aes(
+*        x = class,
+*        y = hwy))
+```
+]
+ 
+.panel2-coord-auto[
+![](index_files/figure-html/coord_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Coordinate Systems
+.panel1-coord-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = class,
+         y = hwy)) +
+* geom_boxplot()
+```
+]
+ 
+.panel2-coord-auto[
+![](index_files/figure-html/coord_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Coordinate Systems
+.panel1-coord-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = class,
+         y = hwy)) +
+  geom_boxplot() +
+* coord_flip()
+```
+]
+ 
+.panel2-coord-auto[
+![](index_files/figure-html/coord_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Coordinate Systems
+.panel1-coord-auto[
+
+```r
+ggplot(data = mpg,
+       mapping = aes(
+         x = class,
+         y = hwy)) +
+  geom_boxplot() +
+  coord_flip()
+```
+]
+ 
+.panel2-coord-auto[
+![](index_files/figure-html/coord_auto_04_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-coord-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-coord-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-coord-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+# Themes
+.footnote[Source: ggplot2 workshop by @thomasp85]
+.pull-right[![](images/tom_theme.png)]
+.pull-left[
+- Style changes that are not related to data
+
+- Can apply built-in themes or modify each element separately
+
+- Follows hierarchy i.e. changes in the upper level percolate to lower levels 
+]
+
+---
+
+
+count: false
+ 
+#Themes
+.panel1-themes1-rotate[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+* theme_classic()
+```
+]
+ 
+.panel2-themes1-rotate[
+![](index_files/figure-html/themes1_rotate_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Themes
+.panel1-themes1-rotate[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+* theme_minimal()
+```
+]
+ 
+.panel2-themes1-rotate[
+![](index_files/figure-html/themes1_rotate_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Themes
+.panel1-themes1-rotate[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+* theme_dark()
+```
+]
+ 
+.panel2-themes1-rotate[
+![](index_files/figure-html/themes1_rotate_03_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-themes1-rotate {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-themes1-rotate {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-themes1-rotate {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+---
+#Themes
+
+```r
+ggplot(data=mpg, aes(x=displ, y=hwy))+geom_point()+
+  theme(
+    panel.grid.major = element_line('white',size = 0.5),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.border = element_rect(colour = "blue", fill = NA, linetype = 2),
+    panel.background = element_rect(fill = "aliceblue"),
+    axis.title = element_text(colour = "blue", face = "bold", family = "Times"),
+    axis.text=element_text(face="bold")
+  )
+```
+
+![](index_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+???
+Check out `ggthemes` package for many more theme options
+---
+
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+*ggplot(data=mpg)
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_01_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+* aes(x=displ)
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+* aes(y=hwy)
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+* geom_point()
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_04_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+* theme_minimal()
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_05_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()+
+* labs(x="Displacement")
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_06_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Displacement")+
+* labs(y="Highway Mileage")
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_07_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Displacement")+
+  labs(y="Highway Mileage")+
+* labs(title="My first GGPLOT")
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_08_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Displacement")+
+  labs(y="Highway Mileage")+
+  labs(title="My first GGPLOT")+
+* labs(subtitle="This is the subtitle")
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_09_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##Adding labels to your plot
+.panel1-lables1-auto[
+
+```r
+ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Displacement")+
+  labs(y="Highway Mileage")+
+  labs(title="My first GGPLOT")+
+  labs(subtitle="This is the subtitle")+
+* labs(caption="Source:mpg dataset")
+```
+]
+ 
+.panel2-lables1-auto[
+![](index_files/figure-html/lables1_auto_10_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-lables1-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-lables1-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-lables1-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+
+
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+*myplot &lt;- ggplot(data=mpg)
+```
+]
+ 
+.panel2-lables2-auto[
+
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+* aes(x=displ)
+```
+]
+ 
+.panel2-lables2-auto[
+
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+* aes(y=hwy)
+```
+]
+ 
+.panel2-lables2-auto[
+
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+* geom_point()
+```
+]
+ 
+.panel2-lables2-auto[
+
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+* theme_minimal()
+```
+]
+ 
+.panel2-lables2-auto[
+
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()
+
+*myplot
+```
+]
+ 
+.panel2-lables2-auto[
+![](index_files/figure-html/lables2_auto_06_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()
+
+myplot+
+* labs(x="Displacement")
+```
+]
+ 
+.panel2-lables2-auto[
+![](index_files/figure-html/lables2_auto_07_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()
+
+myplot+
+  labs(x="Displacement")+
+* labs(y="Highway Mileage")
+```
+]
+ 
+.panel2-lables2-auto[
+![](index_files/figure-html/lables2_auto_08_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()
+
+myplot+
+  labs(x="Displacement")+
+  labs(y="Highway Mileage")+
+* labs(title="My first GGPLOT")
+```
+]
+ 
+.panel2-lables2-auto[
+![](index_files/figure-html/lables2_auto_09_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()
+
+myplot+
+  labs(x="Displacement")+
+  labs(y="Highway Mileage")+
+  labs(title="My first GGPLOT")+
+* labs(subtitle="This is the subtitle")
+```
+]
+ 
+.panel2-lables2-auto[
+![](index_files/figure-html/lables2_auto_10_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+##ggplot object
+.panel1-lables2-auto[
+
+```r
+myplot &lt;- ggplot(data=mpg)+
+  aes(x=displ)+
+  aes(y=hwy)+
+  geom_point()+
+  theme_minimal()
+
+myplot+
+  labs(x="Displacement")+
+  labs(y="Highway Mileage")+
+  labs(title="My first GGPLOT")+
+  labs(subtitle="This is the subtitle")+
+* labs(caption="Source:mpg dataset")
+```
+]
+ 
+.panel2-lables2-auto[
+![](index_files/figure-html/lables2_auto_11_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-lables2-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-lables2-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-lables2-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+# A `ggplot` template
+`ggplot(data = &lt;DATA&gt;) + `  
+ ` &lt;GEOM_FUNCTION&gt;(`  
+     `mapping = aes(&lt;MAPPINGS&gt;),`  
+     `stat = &lt;STAT&gt;,`   
+    ` position = &lt;POSITION&gt;`  
+  `) +`  
+ ` &lt;COORDINATE_FUNCTION&gt; +`  
+  `&lt;FACET_FUNCTION&gt;`  
+  
+*In practice, you rarely need to supply all seven parameters to make a graph because ggplot2 will provide useful defaults for everything except the data, the mappings, and the geom function.*
+---
+
+class: inverse, middle, center
+
+# BEYOND ggplot2
+How to better compose, annotate and highlight your plots
+
+---
+![](images/horst_patchwork_1.jpg)
+---
+# Plot Composition with `patchwork`
+
+
+```r
+library(ggplot2)
+library(patchwork)
+p1 &lt;- ggplot(mpg) + geom_point(aes(displ, hwy)) # first plot
+p2 &lt;- ggplot(mpg) + geom_boxplot(aes(displ, hwy, group = class)) # second plot 
+p1+p2 # combined plot output using patchwork package
+```
+
+![](index_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+---
+# Plot Composition with `patchwork`
+
+```r
+p3 &lt;- ggplot(mpg, aes(displ, hwy))+geom_point(aes(color=class))+geom_smooth(aes(color=class))
+p4 &lt;- ggplot(mpg) + geom_bar(aes(class))
+*p5&lt;-(p1 | p2 | p3) / p4
+p5+plot_annotation('This is a title', caption = 'Source: mpg dataset',
+                   theme = theme(plot.caption = element_text(size = 14),
+                                 plot.title = element_text(size = 18)))
+```
+
+![](index_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+---
+![](images/horst_ggrepel.jpeg)
+---
+# Plot Annotation without `ggrepel`
+
+```r
+ggplot(mpg[1:20,], aes(x = displ, y = hwy)) +
+  geom_point() +
+* geom_text(aes(label = model))
+```
+
+![](index_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+---
+# Plot Annotation with `ggrepel`
+
+```r
+*library(ggrepel)
+ggplot(mpg[1:20,], aes(x = displ, y = hwy)) +
+  geom_point() +
+* geom_text_repel(aes(label = model))
+```
+
+![](index_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+---
+![](images/horst_gghighlight.jpeg)
+---
+
+
+count: false
+ 
+#Highlighting geoms
+.panel1-highlight1-auto[
+
+```r
+*library(gghighlight)
+```
+]
+ 
+.panel2-highlight1-auto[
+
+]
+
+---
+count: false
+ 
+#Highlighting geoms
+.panel1-highlight1-auto[
+
+```r
+library(gghighlight)
+*ggplot(airquality)
+```
+]
+ 
+.panel2-highlight1-auto[
+![](index_files/figure-html/highlight1_auto_02_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Highlighting geoms
+.panel1-highlight1-auto[
+
+```r
+library(gghighlight)
+ggplot(airquality)+
+* geom_line(aes(Day, Temp,
+*               color=factor(Month)))
+```
+]
+ 
+.panel2-highlight1-auto[
+![](index_files/figure-html/highlight1_auto_03_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Highlighting geoms
+.panel1-highlight1-auto[
+
+```r
+library(gghighlight)
+ggplot(airquality)+
+  geom_line(aes(Day, Temp,
+                color=factor(Month)))+
+* theme_bw()
+```
+]
+ 
+.panel2-highlight1-auto[
+![](index_files/figure-html/highlight1_auto_04_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Highlighting geoms
+.panel1-highlight1-auto[
+
+```r
+library(gghighlight)
+ggplot(airquality)+
+  geom_line(aes(Day, Temp,
+                color=factor(Month)))+
+  theme_bw()+
+* labs(x = "Day of Month",
+*      y = "Temperature")
+```
+]
+ 
+.panel2-highlight1-auto[
+![](index_files/figure-html/highlight1_auto_05_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Highlighting geoms
+.panel1-highlight1-auto[
+
+```r
+library(gghighlight)
+ggplot(airquality)+
+  geom_line(aes(Day, Temp,
+                color=factor(Month)))+
+  theme_bw()+
+  labs(x = "Day of Month",
+       y = "Temperature") +
+* theme(legend.position = "top")
+```
+]
+ 
+.panel2-highlight1-auto[
+![](index_files/figure-html/highlight1_auto_06_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Highlighting geoms
+.panel1-highlight1-auto[
+
+```r
+library(gghighlight)
+ggplot(airquality)+
+  geom_line(aes(Day, Temp,
+                color=factor(Month)))+
+  theme_bw()+
+  labs(x = "Day of Month",
+       y = "Temperature") +
+  theme(legend.position = "top")+
+* gghighlight(max(Temp) &gt; 93,
+*             label_key = Month)
+```
+]
+ 
+.panel2-highlight1-auto[
+![](index_files/figure-html/highlight1_auto_07_output-1.png)&lt;!-- --&gt;
+]
+
+---
+count: false
+ 
+#Highlighting geoms
+.panel1-highlight1-auto[
+
+```r
+library(gghighlight)
+ggplot(airquality)+
+  geom_line(aes(Day, Temp,
+                color=factor(Month)))+
+  theme_bw()+
+  labs(x = "Day of Month",
+       y = "Temperature") +
+  theme(legend.position = "top")+
+  gghighlight(max(Temp) &gt; 93,
+              label_key = Month)
+```
+]
+ 
+.panel2-highlight1-auto[
+![](index_files/figure-html/highlight1_auto_08_output-1.png)&lt;!-- --&gt;
+]
+
+&lt;style&gt;
+.panel1-highlight1-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-highlight1-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-highlight1-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+---
+# What next?
+
+- `ggplot2` [extensions](https://exts.ggplot2.tidyverse.org/gallery/)
+- Rstudio [cheatsheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+- BBC Visual and Data Journalism [cookbook for R graphics](https://bbc.github.io/rcookbook/)
+![](images/bbc.png)
+---
+
+class:middle, center
+
+#`openair` package
+
+---
+# Input data type
+- The date/time field should be named `date` 
+- The wind speed and wind direction should be named `ws` and `wd` respectively
+- If you have data from more than one site include a column named `site`
+???
+The principal reason for insisting on specific input data
+format is that there will be less that can go wrong and it is easier to write code for a
+more limited set of conditions.
+---
+#`summaryPlot`
+
+```r
+library(openair) # load openair
+data(mydata) ## make sure data that comes with openair is loaded
+summaryPlot(mydata[,1:5]) # summary of nox and wind data
+```
+
+```
+    date1     date2        ws        wd       nox       no2 
+"POSIXct"  "POSIXt" "numeric" "integer" "integer" "integer" 
+```
+
+![](index_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+???
+ The plots in the left panel show the time series data, where blue shows the presence of data and red missing
+data. The daily mean values are also shown in pale yellow scaled to cover the range in the data
+from zero to the maximum daily value. As such, the daily values are indicative of an overall
+trend rather than conveying quantitative information. For each pollutant, the overall summary
+statistics are given. For each year the percentage data capture is shown in green font. The
+panels on the right show the distribution of each species using a histogram plot
+---
+# `windRose`
+
+```r
+library(openair)
+windRose(mydata)
+```
+
+![](index_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+---
+#`windRose`
+Use `type=` to group your data for plotting
+.pull-left[
+
+```r
+library(openair)
+*windRose(mydata, type = "year",
+         layout = c(4, 2))
+```
+
+![](index_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+]
+
+--
+.pull-right[
+
+```r
+library(openair)
+*windRose(mydata, type = "pm10",
+         layout = c(4, 1))
+```
+
+![](index_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+]
+---
+#`calendarPlot`
+.pull-left[
+
+```r
+library(openair)
+calendarPlot(mydata, pollutant = "o3", 
+             year =2003)
+```
+
+![](index_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+]
+--
+
+.pull-right[
+
+```r
+library(openair)
+calendarPlot(mydata, pollutant = "o3", 
+*            year = 2003, annotate = "ws")
+```
+
+![](index_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+]
+---
+class: middle, center
+###Explore more using the `openair` package manual  
+https://davidcarslaw.com/files/openairmanual.pdf
+---
+#Resources Used
+
+- [`flipbookr`](https://github.com/EvaMaeRey/flipbookr) package by Gina Reynolds
+
+- [`xaringan`](https://github.com/yihui/xaringan) package by Yihui Xie
+
+- [R for Data Science](https://r4ds.had.co.nz/) book by Hadley Wickham &amp; Garrett Grolemund
+
+- [`ggplot2` workshop](https://www.youtube.com/watch?v=h29g21z0a68) by Thomas Lin Pedersen
+
+- [Illustrations](https://github.com/allisonhorst/stats-illustrations) by Allison Horst
+---
+class: inverse, middle, center
+
+# THANK YOU
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:10",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
