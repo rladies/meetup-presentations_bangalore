@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Exploratory Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sushmita V Gopalan" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/rladies.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/rladies-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Exploratory Data Analysis
+### Sushmita V Gopalan
+
+---
+
+
+# Hi, I'm Sushmita!
+
+--
+* decision science at Grubhub
+
+
+--
+* co-organizer at R-Ladies Chicago 
+
+
+--
+* formerly
+   - data scientist at Northwestern Neighbourhood and Network Initiative
+   - computational social science at University of Chicago 
+   - experiments at Institute for Financial Management and Research 
+   - economics at IIT Madras
+
+---
+
+# Today, we're going to 
+
+
+--
+* learn what exploratory data analysis is 
+
+
+--
+* talk about what EDA should leave us poised to do 
+
+
+--
+* understand some general approaches that can be applied to any datasets 
+
+
+--
+* see an example of EDA on a dataset of housing prices in Bangalore
+
+
+--
+* if time and infrastructure permit, work through an example with the famed `iris` dataset 
+
+
+---
+
+# When you first encounter a new dataset
+
+--
+* just *look* at it
+
+
+--
+* how many observations? how many columns?
+
+
+--
+* which variables are numerical, categorical, logical?
+
+
+--
+* do any variables need reclassifying? 
+
+
+--
+* are there missing observations?
+
+
+--
+* does it pass a initial sniff test?
+
+---
+
+# What is exploratory data analysis?
+
+--
+* first step to any analysis
+
+
+--
+* first set of things you do to get acquainted with a new dataset 
+
+
+--
+* iterative process of generating questions about your data 
+
+
+--
+* generate questions 
+
+
+--
+* get your hands dirty 
+
+
+--
+* look for patterns in broad strokes 
+
+
+---
+
+# Housekeeping
+
+
+```r
+library(tidyverse) # general data wrangling
+library(ggplot2) # visualizations
+library(tidylog) # track changes to your data
+library(corrr) # calculate correlations
+library(flipbookr)
+
+theme_set(theme_minimal())
+```
+
+---
+
+# Today's [dataset](https://www.kaggle.com/architsingh15/bengaluru-house-prices) - Housing Prices in Bangalore 
+
+
+```r
+df &lt;- read_csv('housing_prices.csv')
+glimpse(df)
+```
+
+```
+## Rows: 13,320
+## Columns: 9
+## $ area_type    &lt;chr&gt; "Super built-up  Area", "Plot  Area", "Built-up  Area", …
+## $ availability &lt;chr&gt; "19-Dec", "Ready To Move", "Ready To Move", "Ready To Mo…
+## $ location     &lt;chr&gt; "Electronic City Phase II", "Chikka Tirupathi", "Uttarah…
+## $ size         &lt;chr&gt; "2 BHK", "4 Bedroom", "3 BHK", "3 BHK", "2 BHK", "2 BHK"…
+## $ society      &lt;chr&gt; "Coomee", "Theanmp", NA, "Soiewre", NA, "DuenaTa", "Jaad…
+## $ total_sqft   &lt;chr&gt; "1056", "2600", "1440", "1521", "1200", "1170", "2732", …
+## $ bath         &lt;dbl&gt; 2, 5, 2, 3, 2, 2, 4, 4, 3, 6, 2, 5, 2, 2, 3, 2, 3, 3, 4,…
+## $ balcony      &lt;dbl&gt; 1, 3, 3, 1, 1, 1, NA, NA, 1, NA, 2, 3, 1, 2, 2, 2, 2, 3,…
+## $ price        &lt;dbl&gt; 39.07, 120.00, 62.00, 95.00, 51.00, 38.00, 204.00, 600.0…
+```
+
+
+---
+
+#  View your data
+
+
+```r
+df %&gt;% 
+  head()
+```
+
+```
+## # A tibble: 6 x 9
+##   area_type  availability location  size  society total_sqft  bath balcony price
+##   &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1 Super bui… 19-Dec       Electron… 2 BHK Coomee  1056           2       1  39.1
+## 2 Plot  Area Ready To Mo… Chikka T… 4 Be… Theanmp 2600           5       3 120  
+## 3 Built-up … Ready To Mo… Uttaraha… 3 BHK &lt;NA&gt;    1440           2       3  62  
+## 4 Super bui… Ready To Mo… Lingadhe… 3 BHK Soiewre 1521           3       1  95  
+## 5 Super bui… Ready To Mo… Kothanur  2 BHK &lt;NA&gt;    1200           2       1  51  
+## 6 Super bui… Ready To Mo… Whitefie… 2 BHK DuenaTa 1170           2       1  38
+```
+
+---
+
+# Basic Cleaning 
+
+
+```r
+df &lt;- df %&gt;% 
+  mutate(bedrooms = parse_number(size)) %&gt;% 
+  mutate(total_sqft = parse_number(total_sqft))  %&gt;% 
+  mutate(bedroom_cat = case_when(bedrooms &lt; 6 ~ as.character(bedrooms),
+                                 TRUE ~ '6+'),
+         bedroom_cat = as.factor(bedroom_cat))
+
+glimpse(df)
+```
+
+```
+## Rows: 13,320
+## Columns: 11
+## $ area_type    &lt;chr&gt; "Super built-up  Area", "Plot  Area", "Built-up  Area", …
+## $ availability &lt;chr&gt; "19-Dec", "Ready To Move", "Ready To Move", "Ready To Mo…
+## $ location     &lt;chr&gt; "Electronic City Phase II", "Chikka Tirupathi", "Uttarah…
+## $ size         &lt;chr&gt; "2 BHK", "4 Bedroom", "3 BHK", "3 BHK", "2 BHK", "2 BHK"…
+## $ society      &lt;chr&gt; "Coomee", "Theanmp", NA, "Soiewre", NA, "DuenaTa", "Jaad…
+## $ total_sqft   &lt;dbl&gt; 1056, 2600, 1440, 1521, 1200, 1170, 2732, 3300, 1310, 10…
+## $ bath         &lt;dbl&gt; 2, 5, 2, 3, 2, 2, 4, 4, 3, 6, 2, 5, 2, 2, 3, 2, 3, 3, 4,…
+## $ balcony      &lt;dbl&gt; 1, 3, 3, 1, 1, 1, NA, NA, 1, NA, 2, 3, 1, 2, 2, 2, 2, 3,…
+## $ price        &lt;dbl&gt; 39.07, 120.00, 62.00, 95.00, 51.00, 38.00, 204.00, 600.0…
+## $ bedrooms     &lt;dbl&gt; 2, 4, 3, 3, 2, 2, 4, 4, 3, 6, 3, 4, 2, 2, 3, 2, 3, 3, 3,…
+## $ bedroom_cat  &lt;fct&gt; 2, 4, 3, 3, 2, 2, 4, 4, 3, 6+, 3, 4, 2, 2, 3, 2, 3, 3, 3…
+```
+
+---
+
+# Summary
+
+
+```r
+summary(df)
+```
+
+```
+##   area_type         availability         location             size          
+##  Length:13320       Length:13320       Length:13320       Length:13320      
+##  Class :character   Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##                                                                             
+##                                                                             
+##                                                                             
+##                                                                             
+##    society            total_sqft         bath           balcony     
+##  Length:13320       Min.   :    1   Min.   : 1.000   Min.   :0.000  
+##  Class :character   1st Qu.: 1100   1st Qu.: 2.000   1st Qu.:1.000  
+##  Mode  :character   Median : 1274   Median : 2.000   Median :2.000  
+##                     Mean   : 1553   Mean   : 2.693   Mean   :1.584  
+##                     3rd Qu.: 1675   3rd Qu.: 3.000   3rd Qu.:2.000  
+##                     Max.   :52272   Max.   :40.000   Max.   :3.000  
+##                                     NA's   :73       NA's   :609    
+##      price           bedrooms      bedroom_cat
+##  Min.   :   8.0   Min.   : 1.000   1 : 656    
+##  1st Qu.:  50.0   1st Qu.: 2.000   2 :5528    
+##  Median :  72.0   Median : 3.000   3 :4857    
+##  Mean   : 112.6   Mean   : 2.804   4 :1417    
+##  3rd Qu.: 120.0   3rd Qu.: 3.000   5 : 356    
+##  Max.   :3600.0   Max.   :43.000   6+: 506    
+##                   NA's   :16
+```
+
+---
+
+# Missing Values 
+
+
+```r
+map_df(df, ~ sum(is.na(.))) %&gt;%  
+    t() %&gt;%
+    as.data.frame() %&gt;%
+    rename(n_NA = V1) %&gt;% 
+    rownames_to_column('variable') %&gt;% 
+    mutate(pct_NA = round(n_NA*100/nrow(df),2)) %&gt;% 
+    arrange(-pct_NA) 
+```
+
+```
+##        variable n_NA pct_NA
+## 1       society 5502  41.31
+## 2       balcony  609   4.57
+## 3          bath   73   0.55
+## 4          size   16   0.12
+## 5      bedrooms   16   0.12
+## 6      location    1   0.01
+## 7     area_type    0   0.00
+## 8  availability    0   0.00
+## 9    total_sqft    0   0.00
+## 10        price    0   0.00
+## 11  bedroom_cat    0   0.00
+```
+---
+# Missing Values 
+
+
+```r
+df %&gt;% 
+  count(balcony)
+```
+
+```
+## # A tibble: 5 x 2
+##   balcony     n
+##     &lt;dbl&gt; &lt;int&gt;
+## 1       0  1029
+## 2       1  4897
+## 3       2  5113
+## 4       3  1672
+## 5      NA   609
+```
+
+
+```r
+df %&gt;% 
+  mutate(missing = ifelse(is.na(society), TRUE, FALSE)) %&gt;% 
+  group_by(missing) %&gt;% 
+  summarise(avg = mean(price))
+```
+
+```
+## # A tibble: 2 x 2
+##   missing   avg
+##   &lt;lgl&gt;   &lt;dbl&gt;
+## 1 FALSE    101.
+## 2 TRUE     128.
+```
+
+---
+
+# One Variable
+
+* continuous? discrete?
+
+--
+
+* how is it distributed?
+
+--
+
+* are there outliers?
+
+--
+
+---
+
+
+# Continuous Variables
+
+* summary statistics 
+
+* boxplots
+
+* histograms
+
+* smoothed histogram
+
+
+```r
+df %&gt;% 
+  select_if(is.numeric) %&gt;% 
+  head()
+```
+
+```
+## select_if: dropped 6 variables (area_type, availability, location, size, society, …)
+```
+
+```
+## # A tibble: 6 x 5
+##   total_sqft  bath balcony price bedrooms
+##        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1       1056     2       1  39.1        2
+## 2       2600     5       3 120          4
+## 3       1440     2       3  62          3
+## 4       1521     3       1  95          3
+## 5       1200     2       1  51          2
+## 6       1170     2       1  38          2
+```
+
+---
+# Five Number Summaries
+
+* Min
+* First quartile
+* Median
+* Third quartile
+* Maximum
+
+
+```r
+five_number_summary &lt;- function(df, var){
+df %&gt;% 
+  drop_na({{var}}) %&gt;% 
+  select({{var}}, bath) %&gt;% 
+  summarise(min = min({{var}}),
+         q1 = quantile({{var}}, 0.25),
+         median = quantile({{var}}, 0.5),
+         q3 = quantile({{var}}, 0.75),
+         max = max({{var}})) 
+}
+```
+
+---
+
+# Five Number Summaries
+
+
+```r
+five_number_summary(df, total_sqft)
+```
+
+```
+## # A tibble: 1 x 5
+##     min    q1 median    q3   max
+##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1  1100   1274  1675 52272
+```
+
+```r
+five_number_summary(df, bath)
+```
+
+```
+## # A tibble: 1 x 5
+##     min    q1 median    q3   max
+##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2      2     3    40
+```
+
+```r
+five_number_summary(df, balcony)
+```
+
+```
+## # A tibble: 1 x 5
+##     min    q1 median    q3   max
+##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0     1      2     2     3
+```
+
+---
+
+
+## Five Number Summaries
+
+
+```r
+five_number_summary(df, price)
+```
+
+```
+## # A tibble: 1 x 5
+##     min    q1 median    q3   max
+##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     8    50     72   120  3600
+```
+
+```r
+five_number_summary(df, bedrooms)
+```
+
+```
+## # A tibble: 1 x 5
+##     min    q1 median    q3   max
+##   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2      3     3    43
+```
+
+---
+
+## Boxplots
+
+
+```r
+df %&gt;% 
+  ggplot() + 
+  geom_boxplot(aes(x = price))
+```
+
+![](final_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+
+## Boxplots - remove extreme outliers? 
+
+`x` is considered an 'extreme outlier' if it is more than 3*IQR away from the mean 
+
+
+```r
+remove_outliers &lt;- function(df, var){
+  
+  IQR &lt;- IQR(df %&gt;% pull({{var}}))
+  mean_value &lt;- mean(df %&gt;% pull({{var}}))
+  
+  df &lt;- df %&gt;% 
+    filter({{var}} &gt; (mean_value - 3*IQR)) %&gt;% 
+    filter({{var}} &lt; (mean_value + 3*IQR))
+  return(df)
+}
+```
+
+---
+
+## Boxplots - remove extreme outliers? 
+
+
+```r
+df %&gt;% 
+  remove_outliers(price) %&gt;% 
+  ggplot() + 
+  geom_boxplot(aes(x = price)) +
+  ggtitle("Price without extreme outliers")
+```
+
+![](final_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+---
+
+
+## Boxplots - remove moderate outliers? 
+
+`x` is considered an 'extreme outlier' if it is more than 3*IQR away from the mean 
+
+
+```r
+remove_outliers &lt;- function(df, var, threshold){
+
+  IQR &lt;- IQR(df %&gt;% pull({{var}}))
+  mean_value &lt;- mean(df %&gt;% pull({{var}}))
+
+  df &lt;- df %&gt;% 
+*   filter({{var}} &gt; (mean_value - threshold*IQR)) %&gt;%
+*   filter({{var}} &lt; (mean_value + threshold*IQR))
+  return(df)
+}
+```
+---
+
+## Boxplots - remove moderate outliers? 
+
+```r
+df %&gt;% 
+  remove_outliers(price,1.5) %&gt;% 
+  ggplot() + 
+  geom_boxplot(aes(x = price)) +
+  ggtitle("Price without moderate outliers")
+```
+
+![](final_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+---
+
+## Histograms
+
+
+```r
+df %&gt;% 
+  ggplot() + 
+  geom_histogram(aes(x = price))
+```
+
+![](final_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+---
+
+## Histograms
+
+```r
+df %&gt;% 
+  ggplot() + 
+* geom_histogram(aes(x = price), binwidth = 2)
+```
+
+![](final_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+---
+
+## Density 
+
+
+```r
+df %&gt;% 
+  ggplot() + 
+  geom_density(aes(x = price))
+```
+
+![](final_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+
+
+---
+# Continuous Variables 
+
+![](final_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+
+---
+# Discrete Variables
+
+## Unique Values
+
+
+```r
+df %&gt;% 
+  summarise(n_area = n_distinct(area_type),
+            n_availability = n_distinct(availability),
+            n_location = n_distinct(location),
+            n_society = n_distinct(society)) %&gt;% 
+  t() %&gt;% as.data.frame() %&gt;% 
+  rename('n_unique' = 'V1')
+```
+
+```
+##                n_unique
+## n_area                4
+## n_availability       81
+## n_location         1295
+## n_society          2689
+```
+
+---
+# Tables 
+
+```r
+df %&gt;% 
+  count(area_type)
+```
+
+```
+## # A tibble: 4 x 2
+##   area_type                n
+##   &lt;chr&gt;                &lt;int&gt;
+## 1 Built-up  Area        2418
+## 2 Carpet  Area            87
+## 3 Plot  Area            2025
+## 4 Super built-up  Area  8790
+```
+--
+
+```r
+df %&gt;% count(balcony)
+```
+
+```
+## # A tibble: 5 x 2
+##   balcony     n
+##     &lt;dbl&gt; &lt;int&gt;
+## 1       0  1029
+## 2       1  4897
+## 3       2  5113
+## 4       3  1672
+## 5      NA   609
+```
+
+---
+# Bar Charts
+
+
+```r
+plot_bar &lt;- function(df, var){
+  df %&gt;% 
+  count({{var}}) %&gt;% 
+  mutate(pct = n/nrow(df)) %&gt;% 
+  ggplot(aes(x = {{var}}, y = pct)) + 
+  geom_bar(stat = 'identity') +
+  geom_text(aes(label = scales::percent(pct)), vjust = -0.5)
+}
+```
+--
+
+```r
+plot_bar(df, area_type)
+```
+
+![](final_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+df %&gt;% 
+  plot_bar(balcony)
+```
+
+![](final_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+---
+
+# A mess
+
+
+```r
+df %&gt;% 
+  plot_bar(society)
+```
+
+![](final_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+
+---
+
+## Two variables  - both are continuous
+
+
+```r
+p1 &lt;- df %&gt;% 
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Price vs Square footage")
+p1
+```
+
+![](final_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+
+---
+
+## Two variables
+
+```r
+p2 &lt;- df %&gt;% 
+  remove_outliers(total_sqft, 3) %&gt;% 
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Price vs Square footage without sqft outliers")
+p2
+```
+
+![](final_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
+
+---
+
+## Two variables
+
+```r
+p3 &lt;- df %&gt;% 
+  remove_outliers(price, 3) %&gt;% 
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Price vs Square footage without price outliers")
+p3
+```
+
+![](final_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
+
+---
+
+## Two variables
+
+
+```r
+p4 &lt;- df %&gt;% 
+  remove_outliers(price, 3) %&gt;% 
+  remove_outliers(total_sqft, 3) %&gt;%
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Price vs Square footage without either outliers")
+p4
+```
+
+![](final_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
+
+---
+
+```r
+gridExtra::grid.arrange(p1, p2, p3, p4, nrow = 2)
+```
+
+![](final_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
+
+---
+## Outcome vs continuous variables
+
+![](final_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+
+---
+
+## Correlations
+
+![](final_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
+
+---
+## Continuous vs Discrete - grouping
+
+
+```r
+df %&gt;% 
+  remove_outliers(price,3) %&gt;% 
+  ggplot() + 
+  geom_density(aes(x = price, group = area_type, colour = area_type))
+```
+
+![](final_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
+
+---
+## Continuous vs Discrete - faceting
+
+
+```r
+df %&gt;% 
+  remove_outliers(price,3) %&gt;% 
+  ggplot() + 
+  geom_density(aes(x = price)) +
+  facet_wrap(vars(area_type))
+```
+
+![](final_files/figure-html/unnamed-chunk-36-1.png)&lt;!-- --&gt;
+
+---
+## Continuous vs Discrete - grouped boxplots
+
+
+```r
+df %&gt;% 
+  remove_outliers(price,3) %&gt;% 
+  ggplot() + 
+  geom_boxplot(aes(x = area_type, y = price))
+```
+
+![](final_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
+
+---
+
+# Continuous vs Discrete - grouped summary statistics
+
+
+```r
+df %&gt;% 
+  group_by(location) %&gt;% 
+  summarize(average_price = mean(price),
+            median_price = median(price)) %&gt;% 
+  arrange(-average_price) %&gt;% 
+  top_n(5)
+```
+
+```
+## # A tibble: 5 x 3
+##   location       average_price median_price
+##   &lt;chr&gt;                  &lt;dbl&gt;        &lt;dbl&gt;
+## 1 Cubbon Road            1900          1900
+## 2 Ashok Nagar            1486          1486
+## 3 Yemlur                 1093.         1675
+## 4 Church Street          1068          1068
+## 5 D Souza Layout         1015          1015
+```
+
+---
+# Continuous vs Discrete - grouped summary statistics
+
+
+```r
+df %&gt;% 
+  group_by(area_type) %&gt;% 
+  summarize(average_price = mean(price),
+            median_price = median(price)) %&gt;% 
+  arrange(-average_price) %&gt;% 
+  top_n(5)
+```
+
+```
+## # A tibble: 4 x 3
+##   area_type            average_price median_price
+##   &lt;chr&gt;                        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 Plot  Area                   208.           140
+## 2 Built-up  Area               104.            70
+## 3 Super built-up  Area          93.0           65
+## 4 Carpet  Area                  89.5           70
+```
+
+---
+# Continuous vs cut variable
+
+
+```r
+df %&gt;% 
+  ggplot() + 
+  geom_boxplot(aes(x = bedroom_cat, y = price))
+```
+
+![](final_files/figure-html/unnamed-chunk-40-1.png)&lt;!-- --&gt;
+
+---
+# What have we learned? 
+
+--
+* There are probably too many societies to meaningfully model 
+
+
+--
+* Houses with `plot_area` are generally more expensive that the other categories of `area_type`
+
+
+--
+* Prices are more variable in homes with more bedrooms
+
+
+--
+* Larger houses are more expensive overall
+
+
+--
+* Number of bedrooms is highly correlated with the number of bathrooms
+
+
+---
+# What questions do we have?
+
+--
+* Can location be reclassified?
+
+
+--
+* Are houses that are not in societies different from those that are in? Missing not at random?
+
+
+--
+* How are location, size, and price related to each other?
+
+--
+* What's the deal with `availability`?
+
+--
+
+---
+# Remember
+
+--
+* YOU are your audience
+
+
+--
+* You are exploring, not explaining 
+
+
+--
+* If it needs to be done more than once, write a function 
+
+
+--
+* Resist the urge to hard code 
+
+
+--
+* Don't spend time making your graphs pretty
+
+
+--
+* Start developing a body of functions that you typically use 
+
+
+---
+# Thank you so much!
+
+You can find me at 
+
+
+@SushGopalan on Twitter
+
+
+sushmitavgopalan16 on Github
+
+
+www.sushmitagopalan.com
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

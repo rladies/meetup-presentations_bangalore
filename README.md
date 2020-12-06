@@ -9,4 +9,9 @@ Material by R-Ladies Bangalore
 ### 17 October 2020
 - Second meetup.
 - Speaker: Meenakshi Kushwaha
-- What: Data Visualization in R.
+- What: Data Visualization.
+
+### 05 December 2020
+- Third meetup.
+- Speaker: Sushmita V. Gopalan
+- What: Exploratory Data Analysis.

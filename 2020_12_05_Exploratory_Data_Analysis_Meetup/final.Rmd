@@ -1,0 +1,745 @@
+---
+title: "Exploratory Data Analysis"
+author: "Sushmita V Gopalan"
+fig_width: 1
+fig_height: 1 
+output:
+  xaringan::moon_reader:
+    css: ["default", "rladies", "rladies-fonts"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+# Hi, I'm Sushmita!
+
+--
+* decision science at Grubhub
+
+
+--
+* co-organizer at R-Ladies Chicago 
+
+
+--
+* formerly
+   - data scientist at Northwestern Neighbourhood and Network Initiative
+   - computational social science at University of Chicago 
+   - experiments at Institute for Financial Management and Research 
+   - economics at IIT Madras
+
+---
+
+# Today, we're going to 
+
+
+--
+* learn what exploratory data analysis is 
+
+
+--
+* talk about what EDA should leave us poised to do 
+
+
+--
+* understand some general approaches that can be applied to any datasets 
+
+
+--
+* see an example of EDA on a dataset of housing prices in Bangalore
+
+
+--
+* if time and infrastructure permit, work through an example with the famed `iris` dataset 
+
+
+---
+
+# When you first encounter a new dataset
+
+--
+* just *look* at it
+
+
+--
+* how many observations? how many columns?
+
+
+--
+* which variables are numerical, categorical, logical?
+
+
+--
+* do any variables need reclassifying? 
+
+
+--
+* are there missing observations?
+
+
+--
+* does it pass a initial sniff test?
+
+---
+
+# What is exploratory data analysis?
+
+--
+* first step to any analysis
+
+
+--
+* first set of things you do to get acquainted with a new dataset 
+
+
+--
+* iterative process of generating questions about your data 
+
+
+--
+* generate questions 
+
+
+--
+* get your hands dirty 
+
+
+--
+* look for patterns in broad strokes 
+
+
+---
+
+# Housekeeping
+
+```{r message=FALSE, warning=FALSE}
+
+library(tidyverse) # general data wrangling
+library(ggplot2) # visualizations
+library(tidylog) # track changes to your data
+library(corrr) # calculate correlations
+library(flipbookr)
+
+theme_set(theme_minimal())
+```
+
+---
+
+# Today's [dataset](https://www.kaggle.com/architsingh15/bengaluru-house-prices) - Housing Prices in Bangalore 
+
+```{r message = FALSE}
+df <- read_csv('housing_prices.csv')
+glimpse(df)
+```
+
+
+---
+
+#  View your data
+
+```{r message=FALSE, warning=FALSE}
+df %>% 
+  head()
+```
+
+---
+
+# Basic Cleaning 
+
+```{r message=FALSE, warning=FALSE}
+df <- df %>% 
+  mutate(bedrooms = parse_number(size)) %>% 
+  mutate(total_sqft = parse_number(total_sqft))  %>% 
+  mutate(bedroom_cat = case_when(bedrooms < 6 ~ as.character(bedrooms),
+                                 TRUE ~ '6+'),
+         bedroom_cat = as.factor(bedroom_cat))
+
+glimpse(df)
+```
+
+---
+
+# Summary
+
+```{r message=FALSE, warning=FALSE}
+summary(df)
+```
+
+---
+
+# Missing Values 
+
+```{r geoms, message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+map_df(df, ~ sum(is.na(.))) %>%  
+    t() %>%
+    as.data.frame() %>%
+    rename(n_NA = V1) %>% 
+    rownames_to_column('variable') %>% 
+    mutate(pct_NA = round(n_NA*100/nrow(df),2)) %>% 
+    arrange(-pct_NA) 
+```
+---
+# Missing Values 
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  count(balcony)
+```
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  mutate(missing = ifelse(is.na(society), TRUE, FALSE)) %>% 
+  group_by(missing) %>% 
+  summarise(avg = mean(price))
+```
+
+---
+
+# One Variable
+
+* continuous? discrete?
+
+--
+
+* how is it distributed?
+
+--
+
+* are there outliers?
+
+--
+
+---
+
+
+# Continuous Variables
+
+* summary statistics 
+
+* boxplots
+
+* histograms
+
+* smoothed histogram
+
+```{r}
+df %>% 
+  select_if(is.numeric) %>% 
+  head()
+```
+
+---
+# Five Number Summaries
+
+* Min
+* First quartile
+* Median
+* Third quartile
+* Maximum
+
+```{r}
+five_number_summary <- function(df, var){
+df %>% 
+  drop_na({{var}}) %>% 
+  select({{var}}, bath) %>% 
+  summarise(min = min({{var}}),
+         q1 = quantile({{var}}, 0.25),
+         median = quantile({{var}}, 0.5),
+         q3 = quantile({{var}}, 0.75),
+         max = max({{var}})) 
+}
+
+```
+
+---
+
+# Five Number Summaries
+
+```{r, message=FALSE}
+five_number_summary(df, total_sqft)
+five_number_summary(df, bath)
+five_number_summary(df, balcony)
+```
+
+---
+
+
+## Five Number Summaries
+
+```{r message=FALSE}
+five_number_summary(df, price)
+five_number_summary(df, bedrooms)
+```
+
+---
+
+## Boxplots
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  ggplot() + 
+  geom_boxplot(aes(x = price))
+```
+
+---
+
+## Boxplots - remove extreme outliers? 
+
+`x` is considered an 'extreme outlier' if it is more than 3*IQR away from the mean 
+
+```{r}
+remove_outliers <- function(df, var){
+  
+  IQR <- IQR(df %>% pull({{var}}))
+  mean_value <- mean(df %>% pull({{var}}))
+  
+  df <- df %>% 
+    filter({{var}} > (mean_value - 3*IQR)) %>% 
+    filter({{var}} < (mean_value + 3*IQR))
+  return(df)
+}
+```
+
+---
+
+## Boxplots - remove extreme outliers? 
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  remove_outliers(price) %>% 
+  ggplot() + 
+  geom_boxplot(aes(x = price)) +
+  ggtitle("Price without extreme outliers")
+```
+---
+
+
+## Boxplots - remove moderate outliers? 
+
+`x` is considered an 'extreme outlier' if it is more than 3*IQR away from the mean 
+
+```{r}
+remove_outliers <- function(df, var, threshold){
+
+  IQR <- IQR(df %>% pull({{var}}))
+  mean_value <- mean(df %>% pull({{var}}))
+
+  df <- df %>% 
+    filter({{var}} > (mean_value - threshold*IQR)) %>% #<<
+    filter({{var}} < (mean_value + threshold*IQR)) #<<
+  return(df)
+}
+```
+---
+
+## Boxplots - remove moderate outliers? 
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  remove_outliers(price,1.5) %>% 
+  ggplot() + 
+  geom_boxplot(aes(x = price)) +
+  ggtitle("Price without moderate outliers")
+```
+
+---
+
+## Histograms
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  ggplot() + 
+  geom_histogram(aes(x = price))
+```
+---
+
+## Histograms
+```{r fig.width=5, fig.height=5}
+df %>% 
+  ggplot() + 
+  geom_histogram(aes(x = price), binwidth = 2) #<<
+```
+
+---
+
+## Density 
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  ggplot() + 
+  geom_density(aes(x = price))
+```
+
+
+---
+# Continuous Variables 
+
+```{r message=FALSE, warning=FALSE, fig.width=7, fig.height=7, echo=FALSE}
+c1 <- df %>% 
+  remove_outliers(total_sqft, threshold = 3) %>% 
+  ggplot() +
+  geom_histogram(aes(x = total_sqft), binwidth = 50) +
+  ggtitle("Square Footage")
+c2 <- df %>% 
+  drop_na(balcony) %>% 
+  #remove_extremes(balcony) %>% 
+  ggplot() +
+  geom_histogram(aes(x = balcony)) +
+  ggtitle("Balconies")
+c3 <- df %>% 
+  drop_na(bath) %>% 
+  #remove_extremes(bath) %>% 
+  ggplot() +
+  geom_histogram(aes(x = bath)) +
+  ggtitle("Bathrooms")
+c4 <- df %>% 
+  drop_na(bedrooms) %>% 
+  #remove_extremes(bedrooms) %>% 
+  ggplot() +
+  geom_histogram(aes(x = bedrooms)) +
+  ggtitle("Bedrooms")
+gridExtra::grid.arrange(c1, c2, c3, c4, nrow = 2)
+```
+
+---
+# Discrete Variables
+
+## Unique Values
+
+```{r message=FALSE, warning=FALSE}
+df %>% 
+  summarise(n_area = n_distinct(area_type),
+            n_availability = n_distinct(availability),
+            n_location = n_distinct(location),
+            n_society = n_distinct(society)) %>% 
+  t() %>% as.data.frame() %>% 
+  rename('n_unique' = 'V1')
+```
+
+---
+# Tables 
+```{r message=FALSE, warning=FALSE}
+df %>% 
+  count(area_type)
+```
+--
+```{r message=FALSE, warning=FALSE}
+df %>% count(balcony)
+```
+
+---
+# Bar Charts
+
+```{r message=FALSE, warning=FALSE}
+plot_bar <- function(df, var){
+  df %>% 
+  count({{var}}) %>% 
+  mutate(pct = n/nrow(df)) %>% 
+  ggplot(aes(x = {{var}}, y = pct)) + 
+  geom_bar(stat = 'identity') +
+  geom_text(aes(label = scales::percent(pct)), vjust = -0.5)
+}
+
+```
+--
+```{r message=FALSE, warning=FALSE, fig.width=4, fig.height=4}
+plot_bar(df, area_type)
+```
+
+---
+
+```{r message=FALSE, warning=FALSE, fig.width=4, fig.height=4}
+df %>% 
+  plot_bar(balcony)
+```
+---
+
+# A mess
+
+```{r message=FALSE, warning=FALSE, fig.width=7, fig.height=7}
+df %>% 
+  plot_bar(society)
+```
+
+---
+
+## Two variables  - both are continuous
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+p1 <- df %>% 
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Price vs Square footage")
+p1
+```
+
+---
+
+## Two variables
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+p2 <- df %>% 
+  remove_outliers(total_sqft, 3) %>% 
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Price vs Square footage without sqft outliers")
+p2
+```
+
+---
+
+## Two variables
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=4}
+p3 <- df %>% 
+  remove_outliers(price, 3) %>% 
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Price vs Square footage without price outliers")
+p3
+```
+
+---
+
+## Two variables
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=4}
+p4 <- df %>% 
+  remove_outliers(price, 3) %>% 
+  remove_outliers(total_sqft, 3) %>%
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Price vs Square footage without either outliers")
+p4
+```
+
+---
+```{r message=FALSE, warning=FALSE, fig.width=7, fig.height=7}
+gridExtra::grid.arrange(p1, p2, p3, p4, nrow = 2)
+```
+
+---
+## Outcome vs continuous variables
+
+```{r message=FALSE, warning=FALSE, fig.width=7, fig.height=7, echo=FALSE}
+
+g1  <- df %>% 
+  drop_na(price, bedrooms) %>% 
+  remove_outliers(price,3) %>% 
+  ggplot(aes(x = bedrooms, y = price)) + 
+  geom_point() +
+  geom_smooth()
+
+g2  <- df %>% 
+  drop_na(price, balcony) %>% 
+  remove_outliers(price,3) %>% 
+  ggplot(aes(x = balcony, y = price)) + 
+  geom_point() +
+  geom_smooth()
+
+g3  <- df %>% 
+  drop_na(price, bath) %>% 
+  remove_outliers(price,3) %>% 
+  ggplot(aes(x = bath, y = price)) + 
+  geom_point() +
+  geom_smooth()
+
+g4  <- df %>% 
+  drop_na(price, total_sqft) %>% 
+  remove_outliers(price,3) %>% 
+  ggplot(aes(x = total_sqft, y = price)) + 
+  geom_point() +
+  geom_smooth()
+
+gridExtra::grid.arrange(g1,g2,g3,g4)
+
+```
+
+---
+
+## Correlations
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+library(corrr)
+
+plot_lower_diagonal <- function(df){
+numeric_df <-  df %>% 
+  select_if(is.numeric) %>% 
+  replace(., is.na(.), 0)
+  
+correlations <- round(cor(numeric_df),1)
+ggcorrplot::ggcorrplot(correlations,
+           hc.order = TRUE,
+           type = "lower",
+           outline.color = "white") + 
+  theme(axis.text.x = element_text(angle = 90)) +
+  xlab(NULL) +
+  ylab(NULL) +
+  labs(fill = 'Correlation') +
+  ggtitle("Correlations across autodispatch metrics")
+}
+
+get_correlations <- function(df){
+  df %>% 
+  select_if(is.numeric) %>% 
+  replace(., is.na(.), 0) %>% 
+  correlate() %>% 
+  stretch() %>% 
+  rename(var1 = x,
+         var2 = y)}
+
+plot_lower_diagonal(df)
+```
+
+---
+## Continuous vs Discrete - grouping
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+
+df %>% 
+  remove_outliers(price,3) %>% 
+  ggplot() + 
+  geom_density(aes(x = price, group = area_type, colour = area_type))
+```
+
+---
+## Continuous vs Discrete - faceting
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  remove_outliers(price,3) %>% 
+  ggplot() + 
+  geom_density(aes(x = price)) +
+  facet_wrap(vars(area_type))
+```
+
+---
+## Continuous vs Discrete - grouped boxplots
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  remove_outliers(price,3) %>% 
+  ggplot() + 
+  geom_boxplot(aes(x = area_type, y = price))
+```
+
+---
+
+# Continuous vs Discrete - grouped summary statistics
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  group_by(location) %>% 
+  summarize(average_price = mean(price),
+            median_price = median(price)) %>% 
+  arrange(-average_price) %>% 
+  top_n(5)
+```
+
+---
+# Continuous vs Discrete - grouped summary statistics
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  group_by(area_type) %>% 
+  summarize(average_price = mean(price),
+            median_price = median(price)) %>% 
+  arrange(-average_price) %>% 
+  top_n(5)
+```
+
+---
+# Continuous vs cut variable
+
+```{r message=FALSE, warning=FALSE, fig.width=5, fig.height=5}
+df %>% 
+  ggplot() + 
+  geom_boxplot(aes(x = bedroom_cat, y = price))
+```
+
+---
+# What have we learned? 
+
+--
+* There are probably too many societies to meaningfully model 
+
+
+--
+* Houses with `plot_area` are generally more expensive that the other categories of `area_type`
+
+
+--
+* Prices are more variable in homes with more bedrooms
+
+
+--
+* Larger houses are more expensive overall
+
+
+--
+* Number of bedrooms is highly correlated with the number of bathrooms
+
+
+---
+# What questions do we have?
+
+--
+* Can location be reclassified?
+
+
+--
+* Are houses that are not in societies different from those that are in? Missing not at random?
+
+
+--
+* How are location, size, and price related to each other?
+
+--
+* What's the deal with `availability`?
+
+--
+
+---
+# Remember
+
+--
+* YOU are your audience
+
+
+--
+* You are exploring, not explaining 
+
+
+--
+* If it needs to be done more than once, write a function 
+
+
+--
+* Resist the urge to hard code 
+
+
+--
+* Don't spend time making your graphs pretty
+
+
+--
+* Start developing a body of functions that you typically use 
+
+
+---
+# Thank you so much!
+
+You can find me at 
+
+
+@SushGopalan on Twitter
+
+
+sushmitavgopalan16 on Github
+
+
+www.sushmitagopalan.com
