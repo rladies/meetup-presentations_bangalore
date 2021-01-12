@@ -15,3 +15,8 @@ Material by R-Ladies Bangalore
 - Third meetup.
 - Speaker: Sushmita V. Gopalan
 - What: Exploratory Data Analysis.
+
+### 12 December 2020
+- Fourth meetup.
+- Speaker: Pavitra Chakravarty
+- What: Using gt to make great tables.
