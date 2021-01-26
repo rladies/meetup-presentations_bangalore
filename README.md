@@ -25,3 +25,5 @@ Material by R-Ladies Bangalore
 - Fifth meetup.
 - Speaker: Dr. Maëlle Salmon
 - What: Blogging with R Markdown.
+- Materials: [Click here!](https://rmd-blogging-blr.netlify.app/).
+- Repo - [Click here.](https://github.com/maelle/rladies-blr-rmd-blogging)
