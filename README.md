@@ -34,3 +34,7 @@ Material by R-Ladies Bangalore
 - What: Analysing and Visualising population trends and Spatial Mapping.
 - Materials: [Click here!](https://ourcodingclub.github.io/tutorials/trends-analysis-dataviz/).
 - Repo - [Click here.](https://github.com/ourcodingclub/ourcodingclub.github.io/blob/master/_tutorials/trends-analysis-dataviz.md)
+=======
+- Materials: [Click here!](https://rmd-blogging-blr.netlify.app/)
+- Repo - [Click here.](https://github.com/maelle/rladies-blr-rmd-blogging)
+>>>>>>> 4d57a506409a41a1157c616660a0faddffe36de5
