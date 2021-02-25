@@ -27,3 +27,10 @@ Material by R-Ladies Bangalore
 - What: Blogging with R Markdown.
 - Materials: [Click here!](https://rmd-blogging-blr.netlify.app/).
 - Repo - [Click here.](https://github.com/maelle/rladies-blr-rmd-blogging)
+
+### 20 February 2021
+- Sixth meetup.
+- Speaker: Gergana Daskalova
+- What: Analysing and Visualising population trends and Spatial Mapping.
+- Materials: [Click here!](https://ourcodingclub.github.io/tutorials/trends-analysis-dataviz/).
+- Repo - [Click here.](https://github.com/ourcodingclub/ourcodingclub.github.io/blob/master/_tutorials/trends-analysis-dataviz.md)
