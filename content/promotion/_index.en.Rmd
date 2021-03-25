@@ -1,0 +1,11 @@
+---
+title: Readers
+weight: 5
+chapter: true
+slides: true
+output: hugodown::md_document
+---
+
+# Around readers
+
+A few tips about promoting your blog & interacting with readers.

@@ -1,0 +1,37 @@
+---
+title: Notes from the demo
+menuTitle: Demo
+weight: 5
+slides: true
+output: hugodown::md_document
+---
+
+Mostly following [Alison Hill's blogdown tutorial](https://alison.rbind.io/post/new-year-new-blogdown/) but with a different theme by... Alison Hill. :grin:
+
+- install the blogdown package `install.packages("blogdown")`
+
+- create a new empty RStudio project
+
+- `blogdown::new_site(theme = "apreshill/blogophonic")`
+
+- use my Rprofile options from snippets
+
+- `blogdown::serve_site()`
+
+- look where things live e.g. data/ vs content/.
+
+- `blogdown::new_post(title = "Hi Hugo", ext = '.Rmarkdown', subdir = "blog")`
+
+- write and knit
+
+- `blogdown::check_site()`
+
+- `usethis::use_git()`
+
+- in shell, move master branch to main. `git branch -m main master`
+
+- `usethis::use_github()`
+
+- Set up Netlify
+
+- Show Hugo theme gallery https://themes.gohugo.io/

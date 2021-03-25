@@ -1,0 +1,67 @@
+---
+title: Notes from the demo
+menuTitle: Demo
+weight: 5
+slides: true
+output: hugodown::md_document
+---
+
+- show the RStudio IDE, ask whether anyone is unfamiliar with it.
+
+- install the distill package, `remotes::install_github("rstudio/distill")`
+
+- create blog (from RStudio Create New Project, not `distill::create_blog()`).
+
+- what's in the folder now?
+
+- show website in local browser.
+
+- `usethis::use_git()`
+
+- change site but not URL, and about. change citations: true!!!
+
+- rebuild the site via RStudio build button or `rmarkdown::render_site()`.
+
+- show website in local browser.
+
+- edit and knit welcome. including author info!!
+
+- look what changed, commit
+
+- show website in local browser.
+
+- look at post html in _posts and _site. mention navbar
+
+- commit
+
+- add a post with `distill::create_post()`. knit, look what changed this time.
+
+- add references
+
+- add latex, mention JavaScript
+
+- add footnote and aside
+
+- put website online via Netlify drag and drop.
+
+- add `base_url` to site config, show citations metadata is added.
+
+- Netlify drag and drop.
+
+- `distill::create_theme(name = "theme")`.
+
+- other minimal style tweaks (link aspect). Introduce the web developer console.
+
+- Netlify drag and drop
+
+- GitHub repo `usethis::use_github()`
+
+- mention git checkout -b and [the distill docs about blog post workflows](https://rstudio.github.io/distill/blog_workflow.html).
+
+- Other options for deployment (Netlify link to repo, [distill docs](https://rstudio.github.io/distill/publish_website.html))
+
+- add Twitter&GitHub
+
+- install the postcards package. `remotes::install_github("seankross/postcards")`
+
+- Follow Alison Hill's tutorial ["M-F-E-O: postcards + distill"]](https://alison.rbind.io/post/2020-12-22-postcards-distill/). `postcards::create_postcard("about.Rmd")`
