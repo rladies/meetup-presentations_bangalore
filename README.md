@@ -23,7 +23,7 @@ Material by R-Ladies Bangalore
 
 ### 15 January 2021
 - Fifth meetup.
-- Speaker: Dr. Maëlle Salmon
+- Speaker: Dr. MaÃ«lle Salmon
 - What: Blogging with R Markdown.
 - Materials: [Click here!](https://rmd-blogging-blr.netlify.app/)
 - Repo - [Click here.](https://github.com/maelle/rladies-blr-rmd-blogging)
@@ -34,6 +34,7 @@ Material by R-Ladies Bangalore
 - What: Analysing and Visualising population trends and Spatial Mapping.
 - Materials: [Click here!](https://ourcodingclub.github.io/tutorials/trends-analysis-dataviz/)
 - Repo - [Click here.](https://github.com/ourcodingclub/ourcodingclub.github.io/blob/master/_tutorials/trends-analysis-dataviz.md)
+<<<<<<< HEAD
 
 ### 20 March 2021
 - Seventh meetup.
@@ -41,3 +42,4 @@ Material by R-Ladies Bangalore
 - What: Tips and Trciks R Markdown.
 - Materials: [Click here!](https://ourcodingclub.github.io/tutorials/trends-analysis-dataviz/)
 - Repo - [Click here.](https://github.com/ourcodingclub/ourcodingclub.github.io/blob/master/_tutorials/trends-analysis-dataviz.md)
+
