@@ -47,5 +47,5 @@ Material by R-Ladies Bangalore
 - Eighth and Ninth meetups.
 - Speaker: Dr. Janani Ravi
 - What: Introduction to Tidyverse I & II
-- Materials: [Click here]()
+- Materials: [Click here](https://github.com/jananiravi/tidyverse-genomics)
 - Repo: [Click here](https://github.com/jananiravi/tidyverse-genomics)
