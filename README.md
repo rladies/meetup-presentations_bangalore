@@ -43,3 +43,9 @@ Material by R-Ladies Bangalore
 - Materials: [Click here!](https://ourcodingclub.github.io/tutorials/trends-analysis-dataviz/)
 - Repo - [Click here.](https://github.com/ourcodingclub/ourcodingclub.github.io/blob/master/_tutorials/trends-analysis-dataviz.md)
 
+## 18 & 25 April 2021
+- Eighth and Ninth meetups.
+- Speaker: Dr. Janani Ravi
+- What: Introduction to Tidyverse I & II
+- Materials: [Click here]()
+- Repo: [Click here](https://github.com/jananiravi/tidyverse-genomics)
