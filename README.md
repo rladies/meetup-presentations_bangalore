@@ -48,4 +48,4 @@ Material by R-Ladies Bangalore
 - Speaker: Dr. Janani Ravi
 - What: Introduction to Tidyverse I & II
 - Materials: [Click here](https://github.com/jananiravi/tidyverse-genomics)
-- Repo: [Click here](https://github.com/jananiravi/tidyverse-genomics)
+- Repo: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1_Meetup)
