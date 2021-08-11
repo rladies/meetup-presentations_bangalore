@@ -47,8 +47,8 @@ Material by R-Ladies Bangalore
 - Eighth and Ninth meetups.
 - Speaker: Dr. Janani Ravi
 - What: Introduction to Tidyverse I & II
-- Materials: [Click here]()
-- Repo: [Click here]()
+- Materials: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1%262_Meetup)
+- Repo: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1%262_Meetup)
 
 ## 24 July 2021
 - Tenth meetup
