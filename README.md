@@ -1,5 +1,5 @@
 # meetup-presentations_bangalore
-Material by R-Ladies Bangalore
+Materials by R-Ladies Bengaluru, India
 
 ### 12 September 2020
 - First meetup.
