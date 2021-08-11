@@ -51,7 +51,7 @@ Material by R-Ladies Bangalore
 - Repo: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1_Meetup)
 
 ## 24 July 2021
-- Tenth meetups.
+- Tenth meetup
 - Speaker: Dr. Heidi Seibold
 - What: useR! 2021 keynote rewatch
 - Materials: [Click here](https://docs.google.com/presentation/d/1XQc2U2X8hiK43UzUi9IwvsvULxhVy0WzWSa_Kt4ZJv4/edit#slide=id.p)
