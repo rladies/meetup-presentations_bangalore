@@ -49,3 +49,10 @@ Material by R-Ladies Bangalore
 - What: Introduction to Tidyverse I & II
 - Materials: [Click here](https://github.com/jananiravi/tidyverse-genomics)
 - Repo: [Click here](https://github.com/jananiravi/tidyverse-genomics)
+
+## 24 July 2021
+- Tenth meetups.
+- Speaker: Dr. Heidi Seibold
+- What: useR! 2021 keynote rewatch
+- Materials: [Click here](https://docs.google.com/presentation/d/1XQc2U2X8hiK43UzUi9IwvsvULxhVy0WzWSa_Kt4ZJv4/edit#slide=id.p)
+- Video: [Click here](https://www.youtube.com/watch?v=qTHykvYOItY)
