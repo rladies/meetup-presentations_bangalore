@@ -57,3 +57,9 @@ Materials by R-Ladies Bengaluru, India
 - Materials: [Click here](https://docs.google.com/presentation/d/1XQc2U2X8hiK43UzUi9IwvsvULxhVy0WzWSa_Kt4ZJv4/edit#slide=id.p)
 - Video: [Click here](https://www.youtube.com/watch?v=qTHykvYOItY)
 
+## 28 August 2021
+- Eleventh meetup
+- Speaker: Dr. Przemysław Biecek
+- What: useR! 2020 keynote rewatch
+- Video: [Click here](https://www.youtube.com/watch?v=9WWn5ew8D8o)
+
