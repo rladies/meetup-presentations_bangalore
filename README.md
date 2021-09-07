@@ -63,3 +63,9 @@ Materials by R-Ladies Bengaluru, India
 - What: useR! 2020 keynote rewatch
 - Video: [Click here](https://www.youtube.com/watch?v=9WWn5ew8D8o)
 
+## 25 September 2021
+- Twelfth meetup
+- Speaker: Dr. Siva Athreya
+- What: 
+- Materials: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1%262_Meetup)
+- Repo: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1%262_Meetup)
