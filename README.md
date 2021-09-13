@@ -68,4 +68,4 @@ Materials by R-Ladies Bengaluru, India
 - Speaker: Dr. Siva Athreya
 - What: Making maps with R
 - Materials: [Click here](https://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
-- Deom: [Click here](https://www.isibang.ac.in/~athreya/incovid19/ktest.php)
+- Demo: [Click here](https://www.isibang.ac.in/~athreya/incovid19/ktest.php)
