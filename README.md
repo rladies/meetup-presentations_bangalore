@@ -66,6 +66,6 @@ Materials by R-Ladies Bengaluru, India
 ## 25 September 2021
 - Twelfth meetup
 - Speaker: Dr. Siva Athreya
-- What: 
-- Materials: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1%262_Meetup)
-- Repo: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1%262_Meetup)
+- What: Making maps with R
+- Materials: [Click here](https://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
+- Deom: [Click here](https://www.isibang.ac.in/~athreya/incovid19/ktest.php)
