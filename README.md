@@ -67,5 +67,5 @@ Materials by R-Ladies Bengaluru, India
 - Twelfth meetup
 - Speaker: Dr. Siva Athreya
 - What: Making maps with R
-- Materials: [Click here](https://eriqande.github.io/rep-res-web/lectures/making-maps-with-R.html)
+- Materials: [Click here](https://www.isibang.ac.in/~athreya/Rtalk/)
 - Demo: [Click here](https://www.isibang.ac.in/~athreya/incovid19/ktest.php)
