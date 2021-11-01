@@ -35,7 +35,6 @@ Materials by R-Ladies Bengaluru, India
 - Materials: [Click here!](https://ourcodingclub.github.io/tutorials/trends-analysis-dataviz/)
 - Repo - [Click here.](https://github.com/ourcodingclub/ourcodingclub.github.io/blob/master/_tutorials/trends-analysis-dataviz.md)
 
-
 ### 20 March 2021
 - Seventh meetup.
 - Speaker: Dr. Allison Horst
@@ -43,27 +42,27 @@ Materials by R-Ladies Bengaluru, India
 - Materials: [Click here!](https://ourcodingclub.github.io/tutorials/trends-analysis-dataviz/)
 - Repo - [Click here.](https://github.com/ourcodingclub/ourcodingclub.github.io/blob/master/_tutorials/trends-analysis-dataviz.md)
 
-## 18 & 25 April 2021
+### 18 & 25 April 2021
 - Eighth and Ninth meetups.
 - Speaker: Dr. Janani Ravi
 - What: Introduction to Tidyverse I & II
 - Materials: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1%262_Meetup)
 - Repo: [Click here](https://github.com/rladies/meetup-presentations_bangalore/tree/master/2021_04_18_Introduction_to_Tidyverse_1%262_Meetup)
 
-## 24 July 2021
+### 24 July 2021
 - Tenth meetup
 - Speaker: Dr. Heidi Seibold
 - What: useR! 2021 keynote rewatch
 - Materials: [Click here](https://docs.google.com/presentation/d/1XQc2U2X8hiK43UzUi9IwvsvULxhVy0WzWSa_Kt4ZJv4/edit#slide=id.p)
 - Video: [Click here](https://www.youtube.com/watch?v=qTHykvYOItY)
 
-## 28 August 2021
+### 28 August 2021
 - Eleventh meetup
 - Speaker: Dr. Przemysław Biecek
 - What: useR! 2020 keynote rewatch
 - Video: [Click here](https://www.youtube.com/watch?v=9WWn5ew8D8o)
 
-## 25 September 2021
+### 25 September 2021
 - Twelfth meetup
 - Speaker: Dr. Siva Athreya
 - What: Making maps with R
