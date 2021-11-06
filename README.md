@@ -68,3 +68,9 @@ Materials by R-Ladies Bengaluru, India
 - What: Making maps with R
 - Materials: [Click here](https://www.isibang.ac.in/~athreya/Rtalk/)
 - Demo: [Click here](https://www.isibang.ac.in/~athreya/incovid19/ktest.php)
+
+### 14 November 2021
+- 13th Meetup
+- Speaker: Dr. Deepayan Sarkar
+- What:  [Lexical Scope and Evaluation](https://deepayan.github.io/r-talks/r-eval/eval.html#1)
+- Materials: [link](https://deepayan.github.io/r-expository-material.html)
