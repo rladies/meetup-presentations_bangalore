@@ -74,3 +74,9 @@ Materials by R-Ladies Bengaluru, India
 - Speaker: Dr. Deepayan Sarkar
 - What:  [Lexical Scope and Evaluation](https://deepayan.github.io/r-talks/r-eval/eval.html#1)
 - Materials: [link](https://deepayan.github.io/r-expository-material.html)
+
+### 16 December 2021
+- 14th Meetup
+- Speaker: Dr. Cédric Scherer
+- What:  [#30DayMapChallenge: The good, the bad and the ugly of crafting maps with ggplot2]()
+- Materials: [link]()
