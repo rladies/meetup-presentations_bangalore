@@ -78,5 +78,5 @@ Materials by R-Ladies Bengaluru, India
 ### 16 December 2021
 - 14th Meetup
 - Speaker: Dr. Cédric Scherer
-- What:  [#30DayMapChallenge: The good, the bad and the ugly of crafting maps with ggplot2]()
-- Materials: [link]()
+- What:  #30DayMapChallenge: The good, the bad and the ugly of crafting maps with ggplot2
+- Material: [link](https://www.cedricscherer.com/slides/RladiesBangalore_30DayMapChallenge.pdf)
