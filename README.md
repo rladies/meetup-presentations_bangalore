@@ -85,5 +85,5 @@ Materials by R-Ladies Bengaluru, India
 - 15th Meetup
 - Speaker: Rahul Venugopal
 - What:  Looking back @ my R journey
-- Material: link
+- Material: [link](https://github.com/rahulvenugopal/RLadies-Bengaluru-Talk-27022022)
 
