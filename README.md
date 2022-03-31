@@ -87,3 +87,9 @@ Materials by R-Ladies Bengaluru, India
 - What:  Looking back @ my R journey
 - Material: [link](https://github.com/rahulvenugopal/RLadies-Bengaluru-Talk-27022022)
 
+### 30 April 2022
+- 16th Meetup
+- Speaker: Maulik Bhatt
+- What:  Creating R Markdown Template for Reproducible Research
+- Material: [link](https://github.com/rladies/meetup-presentations_bangalore/blob/master/2022_04_30_Creating_RMarkdown_Template_for_Reproducible_Research/R%20Markdown%20Templates.pptx)
+
