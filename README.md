@@ -93,7 +93,7 @@ Materials by R-Ladies Bengaluru, India
 - What:  Creating R Markdown Template for Reproducible Research
 - Material: [link](https://github.com/rladies/meetup-presentations_bangalore/blob/master/2022_04_30_Creating_RMarkdown_Template_for_Reproducible_Research/R%20Markdown%20Templates.pptx)
 
-### 17 July 2022
+### 16 July 2022
 - 17th Meetup
 - Speaker: [Adithi R. Upadhya](https://adithirugis.netlify.app/) 
 - What: Introduction to spatial analysis in R
