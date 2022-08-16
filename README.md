@@ -73,31 +73,31 @@ Materials by R-Ladies Bengaluru, India
 - 13th Meetup
 - Speaker: Dr. Deepayan Sarkar
 - What:  [Lexical Scope and Evaluation](https://deepayan.github.io/r-talks/r-eval/eval.html#1)
-- Materials: [link](https://deepayan.github.io/r-expository-material.html)
+- Materials: [Click here](https://deepayan.github.io/r-expository-material.html)
 
 ### 16 December 2021
 - 14th Meetup
 - Speaker: Dr. Cédric Scherer
 - What:  #30DayMapChallenge: The good, the bad and the ugly of crafting maps with ggplot2
-- Material: [link](https://www.cedricscherer.com/slides/RladiesBangalore_30DayMapChallenge.pdf)
+- Material: [Click here](https://www.cedricscherer.com/slides/RladiesBangalore_30DayMapChallenge.pdf)
 
 ### 27 February 2022
 - 15th Meetup
 - Speaker: Rahul Venugopal
 - What:  Looking back @ my R journey
-- Material: [link](https://github.com/rahulvenugopal/RLadies-Bengaluru-Talk-27022022)
+- Material: [Click here](https://github.com/rahulvenugopal/RLadies-Bengaluru-Talk-27022022)
 
 ### 30 April 2022
 - 16th Meetup
 - Speaker: Maulik Bhatt
 - What:  Creating R Markdown Template for Reproducible Research
-- Material: [link](https://github.com/rladies/meetup-presentations_bangalore/blob/master/2022_04_30_Creating_RMarkdown_Template_for_Reproducible_Research/R%20Markdown%20Templates.pptx)
+- Material: [Click here](https://github.com/rladies/meetup-presentations_bangalore/blob/master/2022_04_30_Creating_RMarkdown_Template_for_Reproducible_Research/R%20Markdown%20Templates.pptx)
 
 
 ### 28 August 2022
 - 17th Meetup
 - Speaker: Ayush Patel
 - What:  Parameterized Reporting with RMarkdown and {Purrr} 
-- Material: [link]()
+- Material: [Click here]()
 
 
