@@ -94,3 +94,10 @@ Materials by R-Ladies Bengaluru, India
 - Material: [link](https://github.com/rladies/meetup-presentations_bangalore/blob/master/2022_04_30_Creating_RMarkdown_Template_for_Reproducible_Research/R%20Markdown%20Templates.pptx)
 
 
+### 28 August 2022
+- 17th Meetup
+- Speaker: Ayush Patel
+- What:  Parameterized Reporting with RMarkdown and {Purrr} 
+- Material: [link]()
+
+
