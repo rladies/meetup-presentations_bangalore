@@ -98,6 +98,7 @@ Materials by R-Ladies Bengaluru, India
 - 17th Meetup
 - Speaker: Ayush Patel
 - What:  Parameterized Reporting with RMarkdown and {Purrr} 
-- Material: [Click here]()
+- Material: [Click here](https://github.com/AyushBipinPatel/RLadiesBLR-PurrrPara-talk)
+- Slides : [Click here](https://ayushbipinpatel.github.io/RLadiesBLR-PurrrPara-talk/#/title-slide)
 
 
